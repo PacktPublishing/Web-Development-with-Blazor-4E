@@ -1,0 +1,17 @@
+@using BlazorWebApp.Client.Interfaces
+@using BlazorWebApp.Client.Pages
+@inherits BunitContext
+@code {
+    [Fact(DisplayName = "Checks that the Home component shows 30 posts")]
+    public void Shows10Blogposts()
+    {
+        // Act
+        var cut = Render(@<Home />);
+        // Assert that the content has 30 article tags (each representing a blogpost)
+        Assert.Equal(30, cut.FindAll("article").Count());
+    }
+    public HomeTest()
+    {
+        Services.AddScoped<IBlogRepository, BlogApiMock>();
+    }
+}

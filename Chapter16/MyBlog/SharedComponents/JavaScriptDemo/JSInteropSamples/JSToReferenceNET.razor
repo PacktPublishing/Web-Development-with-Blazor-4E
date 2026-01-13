@@ -1,0 +1,42 @@
+﻿@page "/jstoreferencenet"
+@implements IDisposable
+@inject IJSRuntime jsRuntime
+
+<h3>This is a demo how to call .NET from JavaScript using a .NET reference</h3>
+
+<p>
+    <label>
+        Name: <input @bind="name" />
+    </label>
+</p>
+
+<p>
+    <button @onclick="TriggerDotNetInstanceMethod">
+        Trigger .NET instance method
+    </button>
+</p>
+
+<p>
+    @result
+</p>
+
+@code {
+    private string? name;
+    private string? result;
+    private DotNetObjectReference<JSToReferenceNET>? dotNetHelper;
+    IJSObjectReference jsmodule;
+    public async Task TriggerDotNetInstanceMethod()
+    {
+        dotNetHelper = DotNetObjectReference.Create(this);
+        jsmodule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/_content/SharedComponents/JavaScriptDemo/JSInteropSamples/JStoReferenceNET.razor.js");
+        await jsmodule.InvokeAsync<string>("callreferencenetfromjs", dotNetHelper);
+    }
+
+    [JSInvokable]
+    public string GetHelloMessage() => $"Hello, {name}!";
+
+    public void Dispose()
+    {
+        dotNetHelper?.Dispose();
+    }
+}

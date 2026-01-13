@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/Aspire/">
+    <Project Path="MyBlog.AppHost/MyBlog.AppHost.csproj" />
+    <Project Path="MyBlog.ServiceDefaults/MyBlog.ServiceDefaults.csproj" />
+  </Folder>
+  <Folder Name="/RootLevelCascadingValue/">
+    <Project Path="RootLevelCascadingValueDemo/RootLevelCascadingValueDemo.Client/RootLevelCascadingValueDemo.Client.csproj" />
+    <Project Path="RootLevelCascadingValueDemo/RootLevelCascadingValueDemo/RootLevelCascadingValueDemo.csproj" />
+  </Folder>
+  <Project Path="BlazorWebApp/BlazorWebApp.Client/BlazorWebApp.Client.csproj" />
+  <Project Path="BlazorWebApp/BlazorWebApp/BlazorWebApp.csproj" />
+  <Project Path="BlazorWebAssemblyStandaloneApp/BlazorWebAssemblyStandaloneApp.csproj" />
+  <Project Path="SharedComponents/SharedComponents.csproj" />
+</Solution>

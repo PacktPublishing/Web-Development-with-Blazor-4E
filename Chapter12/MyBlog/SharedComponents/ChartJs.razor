@@ -1,0 +1,45 @@
+@inject IJSRuntime JS
+
+<canvas @ref="_canvas"
+        width="@Width"
+        height="@Height"
+        style="max-width:@($"{Width}px"); max-height:@($"{Height}px")">
+</canvas>
+
+@code {
+    [Parameter, EditorRequired]
+    public object Config { get; set; } = default!;
+
+    [Parameter] public int Width { get; set; } = 300;
+    [Parameter] public int Height { get; set; } = 300;
+
+    private ElementReference _canvas;
+    private IJSObjectReference? _module;
+    private IJSObjectReference? _chart;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        _module = await JS.InvokeAsync<IJSObjectReference>(
+            "import",
+            "/_content/SharedComponents/ChartJs.razor.js");
+
+        _chart = await _module.InvokeAsync<IJSObjectReference>(
+            "createChart",
+            _canvas,
+            Config);
+    }
+
+    public IJSObjectReference? Chart => _chart;
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_chart is not null)
+            await _chart.InvokeVoidAsync("destroy");
+
+        if (_module is not null)
+            await _module.DisposeAsync();
+    }
+}

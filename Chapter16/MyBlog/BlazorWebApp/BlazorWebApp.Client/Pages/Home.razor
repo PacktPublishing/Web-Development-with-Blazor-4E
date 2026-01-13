@@ -1,0 +1,37 @@
+﻿@page "/"
+@using BlazorWebApp.Client.Interfaces
+@using BlazorWebApp.Client.Models
+@using Markdig;
+
+@inject IBlogRepository _repository
+
+@if (BlogPosts == null)
+{
+	<p>Loading</p>	
+}
+else
+{
+	@foreach (BlogPost p in BlogPosts)
+	{
+		<article>
+			<h2>@p.Title</h2>
+			@((MarkupString)Markdig.Markdown.ToHtml(new string(p.Text.Take(100).ToArray()), pipeline))
+			<a href="/Post/@p.Id">Read more</a>
+		</article>
+	}
+}
+
+@code {
+	MarkdownPipeline pipeline;
+	[PersistentState]
+	public List<BlogPost>? BlogPosts { get; set; }
+
+	protected async override Task OnInitializedAsync()
+	{
+		pipeline = new MarkdownPipelineBuilder()
+					.UseEmojiAndSmiley()
+					.Build();
+		BlogPosts ??= await _repository.GetBlogPostsAsync(30, 0);
+		await base.OnInitializedAsync();
+	}
+}

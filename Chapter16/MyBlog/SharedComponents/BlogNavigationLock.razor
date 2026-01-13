@@ -1,0 +1,41 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.JSInterop 
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+<NavigationLock 
+    ConfirmExternalNavigation="@(CurrentEditContext.IsModified() && CheckNavigation)" 
+    OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+
+@code {
+	[CascadingParameter]
+	public required EditContext CurrentEditContext { get; set; }
+	public string InternalNavigationMessage { get; set; } = "You are about to loose changes, are you sure you want to navigate away?"; public bool CheckNavigation { get; set; } = true;
+    protected override Task OnInitializedAsync()
+    {
+        CurrentEditContext.OnFieldChanged += OnFieldChangedAsync;
+        return base.OnInitializedAsync();
+    }
+    private async void OnFieldChangedAsync(object? Sender, FieldChangedEventArgs args)
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+    void IDisposable.Dispose()
+    {
+        CurrentEditContext.OnFieldChanged -= OnFieldChangedAsync;
+    }
+    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+        if (CurrentEditContext.IsModified() && CheckNavigation)
+        {
+            var isConfirmed = await JSRuntime.InvokeAsync<bool>("confirm",
+                InternalNavigationMessage);
+            if (!isConfirmed)
+            {
+                context.PreventNavigation();
+            }
+        }
+    }
+
+}

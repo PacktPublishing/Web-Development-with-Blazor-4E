@@ -1,0 +1,17 @@
+﻿@page "/jstostaticnet"
+<h3>This is a demo how to call .NET from JavaScript</h3>
+
+@*
+    Note that we are using the JavaScript onclick parameter not the @onclick
+    The JavaScript file JSToStaticNET.js is included in the components/App.razor component.
+    <script src="_content/SharedComponents/JavaScriptDemo/JSInteropSamples/JSToStaticNET.razor.js"></script>
+*@
+<button onclick="callnetfromjs()">Show alert with message</button>
+@code {
+    [JSInvokable("MadeUpName")]
+    public static Task<int[]> ReturnArrayAsync()
+    {
+        return Task.FromResult(new int[] { 1, 2, 3 });
+    }
+
+}

@@ -1,0 +1,64 @@
+﻿@using WebAppTest.Client.Services
+@inject WeatherService WeatherService
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">WebAppTest</a> <button onclick="javascript:location.reload(true)">Reload</button>
+    </div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="counter">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="weather">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="weatherstreaming">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather streaming
+            </NavLink>
+        </div>
+
+		 <h2>.NET 8</h2>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="weatherwithstate8">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather with state 
+            </NavLink>
+        </div>
+		<h2>.NET 10</h2>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="weatherwithstate10">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather with state
+            </NavLink>
+        </div>
+        
+        <h2>Tools</h2>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="cache">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Cache
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="changerendermode">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Change render mode
+            </NavLink>
+        </div>
+    </nav>
+</div>
+

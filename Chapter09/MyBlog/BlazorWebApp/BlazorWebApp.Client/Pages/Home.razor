@@ -1,0 +1,25 @@
+﻿@page "/"
+@using BlazorWebApp.Client.Interfaces
+@using BlazorWebApp.Client.Models
+@inject IBlogRepository _repository
+<ul>
+    <Virtualize ItemsProvider="LoadPosts" Context="p">
+        <li><a href="/Post/@p.Id">@p.Title</a></li>
+    </Virtualize>
+</ul>
+
+@code {
+    public int totalBlogposts { get; set; }
+    private async ValueTask<ItemsProviderResult<BlogPost>> LoadPosts(ItemsProviderRequest request)
+    {
+        if (totalBlogposts == 0)
+        {
+            totalBlogposts = await _repository.GetBlogPostCountAsync();
+        }
+        var numblogposts = Math.Min(request.Count, totalBlogposts - request.StartIndex);
+        var blogposts = await _repository.GetBlogPostsAsync(numblogposts, request.StartIndex);
+        return new ItemsProviderResult<BlogPost>(blogposts, totalBlogposts);
+    }
+
+
+}

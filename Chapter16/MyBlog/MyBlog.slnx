@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/Aspire/">
+    <Project Path="MyBlog.AppHost/MyBlog.AppHost.csproj" />
+    <Project Path="MyBlog.ServiceDefaults/MyBlog.ServiceDefaults.csproj" />
+  </Folder>
+  <Project Path="BlazorWebApp/BlazorWebApp.Client/BlazorWebApp.Client.csproj" />
+  <Project Path="BlazorWebApp/BlazorWebApp/BlazorWebApp.csproj" />
+  <Project Path="BlazorWebAssemblyApp/BlazorWebAssemblyApp.csproj" />
+  <Project Path="BlazorWebAssemblyStandaloneApp/BlazorWebAssemblyStandaloneApp.csproj" />
+  <Project Path="MyBlog.Tests/MyBlog.Tests.csproj" Id="e36ec78b-a1c1-4f4b-8ee1-bdec3de1ea3f" />
+  <Project Path="SharedComponents/SharedComponents.csproj" />
+</Solution>

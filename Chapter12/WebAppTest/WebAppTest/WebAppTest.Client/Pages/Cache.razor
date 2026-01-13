@@ -1,0 +1,31 @@
+﻿@page "/cache"
+@inject IJSRuntime JS
+<h3>Cache</h3>
+<button @onclick="ClearCache">Clear Cache</button>
+@code {
+    @code {
+        private IJSObjectReference module;
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                
+                module = await JS.InvokeAsync<IJSObjectReference>("import","/Cache.js");
+            }
+        }
+
+        private async Task ClearCache()
+        {
+            await module.InvokeVoidAsync("clearDotNetResourcesCache");
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (module is not null)
+            {
+                await module.DisposeAsync();
+            }
+        }
+    }
+}

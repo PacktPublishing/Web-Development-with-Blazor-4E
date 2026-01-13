@@ -1,0 +1,23 @@
+@inherits BunitContext
+@using Bunit
+@using SharedComponents;
+@code
+{
+    [Fact]
+    public void AlertStyleTest()
+    {
+        //Arrange
+        Alert.AlertStyle style = Alert.AlertStyle.Primary;
+        var cut = Render(@<Alert Style="@style">
+    <ChildContent>
+        <b>ChildContent fragment</b>
+    </ChildContent>
+</Alert>
+    );
+        //Act
+
+        //Assert
+        cut.MarkupMatches("""<div class="alert alert-primary" role="alert"><b>ChildContent fragment</b></div>""");
+    }
+
+}

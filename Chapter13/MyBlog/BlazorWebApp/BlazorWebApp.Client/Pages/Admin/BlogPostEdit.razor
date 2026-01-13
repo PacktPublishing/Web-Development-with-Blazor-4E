@@ -1,0 +1,132 @@
+﻿@page "/admin/blogposts/new"
+@page "/admin/blogposts/{Id}"
+@inject IBlogRepository _repository
+@inject NavigationManager _manager
+@inject BlogBrowserStorage _storage
+@using BlazorWebApp.Client.Interfaces
+@inject IBlogNotificationService _notificationService
+@attribute [Authorize]
+@using BlazorWebApp.Client.Services
+@using Markdig;
+@using Microsoft.AspNetCore.Components.Forms
+
+<EditForm Model="Post" OnValidSubmit="SavePost">
+    <DataAnnotationsValidator />
+    <BlogNavigationLock @ref="NavigationLock" />
+    <CustomCssClassProvider ProviderType="BootstrapFieldCssClassProvider" />
+    <InputText @bind-Value="Post.Title" />
+    <ValidationMessage For="() => Post.Title" />
+    <InputDate @bind-Value="Post.PublishDate" />
+    <ValidationMessage For="() => Post.PublishDate" />
+    <InputSelect @bind-Value="selectedCategory">
+        <option value="0" disabled>None selected</option>
+        @foreach (var category in Categories)
+        {
+            <option value="@category.Id">@category.Name </option>
+        }
+    </InputSelect>
+    <ul>
+        @foreach (var tag in Tags)
+        {
+            <li>
+                @tag.Name
+                @if (Post.Tags.Any(t => t.Id == tag.Id))
+                {
+                    <button type="button" @onclick="@(() => { Post.Tags.Remove(Post.Tags.Single(t => t.Id == tag.Id)); })">Remove</button>
+                }
+                else
+                {
+                    <button type="button" @onclick="@(() => { Post.Tags.Add(tag); })">Add</button>
+                }
+            </li>
+        }
+    </ul>
+    <InputTextAreaOnInput @bind-Value="Post.Text" @onkeyup="UpdateHTMLAsync" />
+    <ValidationMessage For="() => Post.Text" />
+    <button type="submit" class="btn btn-success">Save</button>
+</EditForm>
+
+
+@((MarkupString)markDownAsHTML)
+
+@code {
+    BlogNavigationLock? NavigationLock { get; set; }
+    [Parameter]
+    public string? Id { get; set; }
+    BlogPost Post { get; set; } = new();
+    List<Category> Categories { get; set; } = new();
+    List<Tag> Tags { get; set; } = new();
+    string? selectedCategory = null;
+    string? markDownAsHTML { get; set; }
+
+    MarkdownPipeline pipeline = default!;
+    protected override Task OnInitializedAsync()
+    {
+        pipeline = new MarkdownPipelineBuilder()
+                 .UseEmojiAndSmiley()
+                 .Build();
+        return base.OnInitializedAsync();
+    }
+
+    protected async Task UpdateHTMLAsync()
+    {
+        if (!string.IsNullOrEmpty(Post.Text))
+        {
+            await _notificationService.SendNotification(Post);
+            markDownAsHTML = Markdig.Markdown.ToHtml(Post.Text, pipeline);
+            if (string.IsNullOrEmpty(Post.Id) && RendererInfo.IsInteractive)
+            {
+                await _storage.SetAsync("EditCurrentPost", Post);
+            }
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id != null)
+        {
+            var p = await _repository.GetBlogPostAsync(Id);
+            if (p != null)
+            {
+                Post = p;
+                if (Post.Category != null)
+                {
+                    selectedCategory = Post.Category.Id;
+                }
+                await UpdateHTMLAsync();
+            }
+        }
+        Categories = (await _repository.GetCategoriesAsync());
+        Tags = (await _repository.GetTagsAsync());
+        base.OnParametersSet();
+    }
+
+    public async Task SavePost()
+    {
+        if (!string.IsNullOrEmpty(selectedCategory) && Categories != null)
+        {
+            var category = Categories.FirstOrDefault(c => c.Id == selectedCategory);
+            if (category != null)
+            {
+                Post.Category = category;
+            }
+        }
+        await _repository.SaveBlogPostAsync(Post);
+        NavigationLock?.CurrentEditContext.MarkAsUnmodified();
+        _manager.NavigateTo("/admin/blogposts");
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && string.IsNullOrEmpty(Id))
+        {
+            var saved = await _storage.GetAsync<BlogPost>("EditCurrentPost");
+            if (saved != null)
+            {
+                Post = saved;
+                StateHasChanged();
+            }
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+}

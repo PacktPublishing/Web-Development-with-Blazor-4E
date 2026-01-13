@@ -1,0 +1,49 @@
+﻿@using WebAppTest.Client.RenderModes
+@inject IJSRuntime JS
+
+
+<b>Rendermode:</b>@GetCurrentRenderMode()
+
+@code {
+    string mode = "Unknown";
+    private bool HasRendered;
+    private bool IsPrerendering = true; // Assume prerendering until proven otherwise
+
+
+    private string GetCurrentRenderMode()
+    {
+        if (OperatingSystem.IsBrowser())
+        {
+            return "WebAssembly";
+        }
+        else if (IsPrerendering)
+        {
+            return "Prerendered";
+        }
+        else if (HasRendered)
+        {
+            return "Server";
+        }
+        return "Static?";
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            HasRendered = true;
+            try
+            {
+                // Attempt a JS interop call to confirm we're past prerendering
+                await JS.InvokeVoidAsync("eval", "");
+                IsPrerendering = false;
+            }
+            catch
+            {
+                // JS interop calls fail during prerendering, so if we catch an exception here, it's still prerendering
+            }
+
+            StateHasChanged(); // Re-render to update the UI with the correct mode
+        }
+    }
+}

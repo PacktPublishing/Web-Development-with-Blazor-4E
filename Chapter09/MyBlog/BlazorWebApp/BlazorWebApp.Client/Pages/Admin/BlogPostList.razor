@@ -1,0 +1,37 @@
+﻿@page "/admin/blogposts"
+@inject IBlogRepository _repository
+<a href="/admin/blogposts/new">New blog post</a>
+@if (posts?.Count == 0)
+{
+    <p>No blog posts found</p>
+}
+else if (posts == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <ul>
+        @foreach (var p in posts)
+        {
+            <li>
+                @p.PublishDate
+                <a href="/admin/blogposts/@p.Id">@p.Title</a>
+            </li>
+        }
+    </ul>
+}
+
+@code{
+
+    private List<BlogPost>? posts = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(1000);
+        var numberofposts = await _repository.GetBlogPostCountAsync();
+        posts = await _repository.GetBlogPostsAsync(numberofposts, 0);
+        await base.OnInitializedAsync();
+    }
+
+}

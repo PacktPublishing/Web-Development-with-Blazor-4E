@@ -1,0 +1,40 @@
+﻿@page "/"
+@using BlazorWebApp.Client.Interfaces
+@using BlazorWebApp.Client.Models
+@using Markdig;
+
+@inject IBlogRepository _repository
+
+<Virtualize ItemsProvider="LoadPosts" Context="p">
+	<article>
+		<h2>@p.Title</h2>
+		@((MarkupString)Markdig.Markdown.ToHtml(new string(p.Text.Take(100).ToArray()), pipeline))
+		<a href="/Post/@p.Id">Read more</a>
+	</article>
+</Virtualize>
+
+
+@code {
+	public int totalBlogposts { get; set; }
+	MarkdownPipeline pipeline;
+	private async ValueTask<ItemsProviderResult<BlogPost>> LoadPosts(ItemsProviderRequest request)
+	{
+		if (totalBlogposts == 0)
+		{
+			totalBlogposts = await _repository.GetBlogPostCountAsync();
+		}
+		var numblogposts = Math.Min(request.Count, totalBlogposts - request.StartIndex);
+		var blogposts = await _repository.GetBlogPostsAsync(numblogposts, request.StartIndex);
+		return new ItemsProviderResult<BlogPost>(blogposts, totalBlogposts);
+	}
+
+	protected override Task OnInitializedAsync()
+	{
+		pipeline = new MarkdownPipelineBuilder()
+					.UseEmojiAndSmiley()
+					.Build();
+		return base.OnInitializedAsync();
+	}
+
+
+}

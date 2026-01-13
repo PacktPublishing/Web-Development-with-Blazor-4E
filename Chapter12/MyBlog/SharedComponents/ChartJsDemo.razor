@@ -1,0 +1,78 @@
+@page "/pacman"
+<h3>Pac-Man Chart</h3>
+
+<button @onclick="ToggleMouth">
+    @(isMouthOpen ? "Close mouth" : "Open mouth")
+</button>
+
+<ChartJs @ref="_chart"
+         Config="@config" />
+
+@code {
+    private ChartJs? _chart;
+
+    private bool isMouthOpen = true;
+    private double value = 65;
+
+    private object config = default!;
+
+    protected override void OnInitialized()
+    {
+        config = CreatePacmanConfig();
+    }
+
+    private object CreatePacmanConfig()
+    {
+        return new
+        {
+            type = "pie",
+            data = new
+            {
+                datasets = new[]
+                {
+                new
+                {
+                    data = new[] { value },
+                    backgroundColor = new[]
+                    {
+                        "#FFD93D", // Pac-Man
+                    },
+                    borderWidth = 0
+                }
+            }
+            },
+            options = new
+            {
+                rotation = 120,
+                circumference = 270, // mouth open
+                plugins = new
+                {
+                    legend = new { display = false },
+                    tooltip = new { enabled = false }
+                },
+                animation = new
+                {
+                    animateRotate = true,
+                    duration = 300
+                }
+            }
+        };
+    }
+
+
+    private async Task ToggleMouth()
+    {
+        if (_chart?.Chart is null)
+            return;
+
+        isMouthOpen = !isMouthOpen;
+
+        var circumference = isMouthOpen ? 270 : 360;
+
+        await _chart.Chart.SetValueAsync(
+            "options.circumference",
+            circumference);
+
+        await _chart.Chart.InvokeVoidAsync("update");
+    }
+}

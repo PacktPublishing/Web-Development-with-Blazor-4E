@@ -1,0 +1,39 @@
+DO $$
+DECLARE
+  cat_id INT;
+  tag1_id INT;
+  tag2_id INT;
+  post1_id INT;
+  post2_id INT;
+BEGIN
+  -- Insert Category
+  INSERT INTO "Categories" ("Name")
+  VALUES ('Blazor')
+  RETURNING "Id" INTO cat_id;
+
+  -- Insert Tags
+  INSERT INTO "Tags" ("Name")
+  VALUES ('C#') RETURNING "Id" INTO tag1_id;
+
+  INSERT INTO "Tags" ("Name")
+  VALUES ('Web') RETURNING "Id" INTO tag2_id;
+
+  -- Insert BlogPosts
+  INSERT INTO "BlogPosts" ("Title", "Text", "PublishDate", "CategoryId")
+  VALUES ('Intro to Blazor', 'Blazor lets you write C# in the browser.', NOW(), cat_id)
+  RETURNING "Id" INTO post1_id;
+
+  INSERT INTO "BlogPosts" ("Title", "Text", "PublishDate", "CategoryId")
+  VALUES ('Blazor with PostgreSQL', 'Let’s connect Blazor to a real database.', NOW(), cat_id)
+  RETURNING "Id" INTO post2_id;
+
+  -- Insert BlogPost-Tag relationships
+  INSERT INTO "BlogPostTags" ("BlogPostsId", "TagsId") VALUES
+    (post1_id, tag1_id), -- Post 1 -> C#
+    (post1_id, tag2_id), -- Post 1 -> Web
+    (post2_id, tag2_id); -- Post 2 -> Web
+
+  -- Insert a Comment
+  INSERT INTO "Comments" ("BlogPostId", "Date", "Text", "Name")
+  VALUES (post1_id, NOW(), 'Great post!', 'Alice');
+END $$;
