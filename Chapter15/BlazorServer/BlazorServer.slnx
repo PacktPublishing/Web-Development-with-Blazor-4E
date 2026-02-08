@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="BlazorServer.AppHost/BlazorServer.AppHost.csproj" />
+  <Project Path="BlazorServer.ServiceDefaults/BlazorServer.ServiceDefaults.csproj" />
+  <Project Path="BlazorServer/BlazorServer.csproj" />
+  <Project Path="WasmBrowserDiagnostics/WasmBrowserDiagnostics.csproj" />
+  <Project Path="WasmDiagnostics/WasmDiagnostics.csproj" />
+</Solution>
