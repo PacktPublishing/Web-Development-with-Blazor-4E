@@ -3,7 +3,7 @@
 public class WeatherService
 {
     //Change this one to false to try out the no-delay version
-    public bool AddDelay { get; set; } = false;
+    public bool AddDelay { get; set; } = true;
     public async Task<WeatherForecast[]?> GetForecastsAsync()
     {
         if(AddDelay)

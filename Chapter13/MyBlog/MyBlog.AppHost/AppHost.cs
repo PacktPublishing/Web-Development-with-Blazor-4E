@@ -7,6 +7,16 @@ var postgres = builder.AddPostgres("postgres")
 var myBlogDatabase = postgres.AddDatabase("myBlogDb");
 
 builder.AddProject<Projects.BlazorWebApp>("blazorwebapp")
+    .WithEndpoint("https", endpoint =>
+    {
+        endpoint.Port = 7119;
+        endpoint.IsProxied = false;
+    })
+    .WithEndpoint("http", endpoint =>
+    {
+        endpoint.Port = 5025;
+        endpoint.IsProxied = false;
+    })
     .WithReference(myBlogDatabase)
     .WaitFor(postgres);
 

@@ -7,7 +7,7 @@
 
 <p>This component demonstrates showing data with persistent state.</p>
 
-@if (forecasts == null)
+@if (Forecasts == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -23,7 +23,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts)
+            @foreach (var forecast in Forecasts)
             {
                 <tr>
                     <td>@forecast.Date.ToShortDateString()</td>
@@ -38,11 +38,11 @@ else
 
 @code {
     [PersistentState]
-    private WeatherForecast[]? forecasts { get; set; }
+    public WeatherForecast[]? Forecasts { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-		forecasts ??= await WeatherService.GetForecastsAsync();
+        Forecasts ??= await WeatherService.GetForecastsAsync();
     }
 
    
