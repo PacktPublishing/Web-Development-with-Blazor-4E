@@ -1,0 +1,32 @@
+﻿@page "/changerendermode"
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+<h3>Select Render Mode</h3>
+<div class="button-container">
+	@foreach (var mode in Enum.GetValues<ComponentRenderMode>())
+	{
+		<a class="render-mode-button" href="@($"{NavigationManager.BaseUri}set-render-mode/{mode}")">@AddSpaceBeforCapitalLetters(mode.ToString())</a>
+	}
+</div>
+
+@code {
+	public string AddSpaceBeforCapitalLetters(string input)
+	{
+		if (string.IsNullOrEmpty(input) || input == "SSR")
+			return input;
+		var result = new System.Text.StringBuilder();
+		result.Append(input[0]);
+		for (int i = 1; i < input.Length; i++)
+		{
+			if (char.IsUpper(input[i]) && !char.IsWhiteSpace(input[i - 1]))
+			{
+				result.Append(' ');
+			}
+			result.Append(input[i]);
+		}
+		return result.ToString();
+	}
+}
+
+

@@ -1,0 +1,27 @@
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; 
+    gap:5px;
+}
+
+.render-mode-button {
+    flex: 1 1 20%; /* Adjust the 20% as needed to control the minimum width */
+    padding: 0.5rem;
+    border: none;
+    border-radius: 0.25rem;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s;
+}
+
+    .render-mode-button:hover {
+        background-color: #0056b3;
+    }
+
+.message {
+    margin-top: 1rem;
+    color: #dc3545;
+}
