@@ -1,6 +1,4 @@
 ﻿@page "/"
-@using BlazorWebApp.Client.Interfaces
-@using BlazorWebApp.Client.Models
 @using Markdig;
 
 @inject IBlogRepository _repository
@@ -24,7 +22,7 @@ else
 @code {
 	MarkdownPipeline pipeline;
 	[PersistentState]
-	public List<BlogPost>? BlogPosts { get; set; }
+	List<BlogPost>? BlogPosts { get; set; }
 
 	protected async override Task OnInitializedAsync()
 	{

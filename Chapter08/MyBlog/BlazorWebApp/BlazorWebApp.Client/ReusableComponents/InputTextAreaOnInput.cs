@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Components.Rendering;
 namespace Microsoft.AspNetCore.Components.Forms;
 
-public class InputTextAreaOnInput :
- InputBase<string?>
+public class InputTextAreaOnInput : InputBase<string?>
 {
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {

@@ -11,7 +11,7 @@
 @code {
 	[CascadingParameter]
 	public required EditContext CurrentEditContext { get; set; }
-	public string InternalNavigationMessage { get; set; } = "You are about to loose changes, are you sure you want to navigate away?"; public bool CheckNavigation { get; set; } = true;
+	public string InternalNavigationMessage { get; set; } = "You are about to lose changes, are you sure you want to navigate away?"; public bool CheckNavigation { get; set; } = true;
     protected override Task OnInitializedAsync()
     {
         CurrentEditContext.OnFieldChanged += OnFieldChangedAsync;

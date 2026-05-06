@@ -6,7 +6,9 @@ import { RouterOutlet } from '@angular/router';
   imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA // Tells Angular we will have custom tags in our templates
+  ]
 })
 export class App {
   protected readonly title = signal('AngularFrontend');

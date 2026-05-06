@@ -31,7 +31,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\BlazorWebApp\BlazorWebApp.Client\BlazorWebApp.Client.csproj" />
 	  <ProjectReference Include="..\BlazorWebApp\BlazorWebApp\BlazorWebApp.csproj" />
 	</ItemGroup>
 

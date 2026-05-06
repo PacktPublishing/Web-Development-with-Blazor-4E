@@ -21,16 +21,14 @@ public class BlogApiWebClient(IHttpClientFactory factory) : IBlogRepository
     public async Task<List<BlogPost>> GetBlogPostsAsync(int numberofposts, int startindex)
     {
         var httpclient = factory.CreateClient("Api");
-        return (await httpclient.GetFromJsonAsync<List<BlogPost>>($"/api/BlogPosts?numberofposts={numberofposts}&startindex={startindex}"))??new();
+        return await httpclient.GetFromJsonAsync<List<BlogPost>>($"/api/BlogPosts?numberofposts={numberofposts}&startindex={startindex}") ?? [];
     }
 
     public async Task<BlogPost?> SaveBlogPostAsync(BlogPost item)
     {
         var httpclient = factory.CreateClient("Api");
-        var response = await httpclient.PutAsJsonAsync<BlogPost>
-           ("api/BlogPosts", item);
-        var json = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<BlogPost>(json);
+        var response = await httpclient.PutAsJsonAsync<BlogPost>("api/BlogPosts", item);
+        return await response.Content.ReadFromJsonAsync<BlogPost>();
     }
     public async Task DeleteBlogPostAsync(string id)
     {
@@ -41,7 +39,7 @@ public class BlogApiWebClient(IHttpClientFactory factory) : IBlogRepository
     public async Task<List<Category>> GetCategoriesAsync()
     {
         var httpclient = factory.CreateClient("Api");
-        return (await httpclient.GetFromJsonAsync<List<Category>>($"api/Categories"))??new();
+        return await httpclient.GetFromJsonAsync<List<Category>>($"api/Categories") ?? [];
     }
     public async Task<Category?> GetCategoryAsync(string id)
     {
@@ -57,8 +55,7 @@ public class BlogApiWebClient(IHttpClientFactory factory) : IBlogRepository
     {
         var httpclient = factory.CreateClient("Api");
         var response = await httpclient.PutAsJsonAsync<Category>("api/Categories", item);
-        var json = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<Category>(json);
+        return await response.Content.ReadFromJsonAsync<Category>();
     }
     public async Task<Tag?> GetTagAsync(string id)
     {
@@ -68,7 +65,7 @@ public class BlogApiWebClient(IHttpClientFactory factory) : IBlogRepository
     public async Task<List<Tag>> GetTagsAsync()
     {
         var httpclient = factory.CreateClient("Api");
-        return (await httpclient.GetFromJsonAsync<List<Tag>>($"api/Tags")) ?? new();
+        return await httpclient.GetFromJsonAsync<List<Tag>>($"api/Tags") ?? [];
     }
     public async Task DeleteTagAsync(string id)
     {
@@ -79,13 +76,12 @@ public class BlogApiWebClient(IHttpClientFactory factory) : IBlogRepository
     {
         var httpclient = factory.CreateClient("Api");
         var response = await httpclient.PutAsJsonAsync<Tag>("api/Tags", item);
-        var json = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<Tag>(json);
+        return await response.Content.ReadFromJsonAsync<Tag>();
     }
     public async Task<List<Comment>> GetCommentsAsync(string blogpostid)
     {
         var httpclient = factory.CreateClient("Api");
-        return (await httpclient.GetFromJsonAsync<List<Comment>>($"api/Comments/{blogpostid}"))??new();
+        return await httpclient.GetFromJsonAsync<List<Comment>>($"api/Comments/{blogpostid}") ?? [];
     }
 
     public async Task DeleteCommentAsync(string id)
@@ -97,8 +93,7 @@ public class BlogApiWebClient(IHttpClientFactory factory) : IBlogRepository
     {
         var httpclient = factory.CreateClient("Api");
         var response = await httpclient.PutAsJsonAsync<Comment>("api/Comments", item);
-        var json = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<Comment>(json);
+        return await response.Content.ReadFromJsonAsync<Comment>();
     }
 
 }

@@ -2,15 +2,13 @@
 using BlazorWebApp.Client.Models;
 using BlazorWebApp.Database;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
 
 namespace BlazorWebApp.Repositories;
 
 public class BlogRepositoryEntityFrameworkDirectAccess(IDbContextFactory<BlogDbContext> factory) : IBlogRepository
 {
     public async Task<BlogPost?> GetBlogPostAsync(string id)
-    {
+    { 
         using var context = factory.CreateDbContext();
         //Convert id to an int
         if (int.TryParse(id, out int intid))
@@ -154,7 +152,7 @@ public class BlogRepositoryEntityFrameworkDirectAccess(IDbContextFactory<BlogDbC
     }
 
 
-    private async Task<BlogPost> SaveItem(BlogPost item)
+    public async Task<BlogPost?> SaveBlogPostAsync(BlogPost item)
     {
         using var context = factory.CreateDbContext();
         if (item.Id == null)
@@ -208,7 +206,7 @@ public class BlogRepositoryEntityFrameworkDirectAccess(IDbContextFactory<BlogDbC
     }
 
 
-    private async Task<Tag> SaveItem(Tag item)
+    public async Task<Tag?> SaveTagAsync(Tag item)
     {
         using var context = factory.CreateDbContext();
         if (item.Id == null)
@@ -234,7 +232,7 @@ public class BlogRepositoryEntityFrameworkDirectAccess(IDbContextFactory<BlogDbC
         }
         return item;
     }
-    private async Task<Category> SaveItem(Category item)
+    public async Task<Category?> SaveCategoryAsync(Category item)
     {
         using var context = factory.CreateDbContext();
         if (item.Id == null)
@@ -261,7 +259,7 @@ public class BlogRepositoryEntityFrameworkDirectAccess(IDbContextFactory<BlogDbC
         return item;
     }
 
-    private async Task<Comment> SaveItem(Comment item)
+    public async Task<Comment?> SaveCommentAsync(Comment item)
     {
         using var context = factory.CreateDbContext();
         if (item.Id == null)
@@ -289,27 +287,6 @@ public class BlogRepositoryEntityFrameworkDirectAccess(IDbContextFactory<BlogDbC
             }
         }
         return item;
-    }
-
-
-    public async Task<BlogPost?> SaveBlogPostAsync(BlogPost item)
-    {
-        return await SaveItem(item);
-    }
-
-    public async Task<Category?> SaveCategoryAsync(Category item)
-    {
-        return await SaveItem(item);
-    }
-
-    public async Task<Tag?> SaveTagAsync(Tag item)
-    {
-        return await SaveItem(item);
-    }
-
-    public async Task<Comment?> SaveCommentAsync(Comment item)
-    {
-        return await SaveItem(item);
     }
 
     public async Task<List<Comment>> GetCommentsAsync(string blogPostId)

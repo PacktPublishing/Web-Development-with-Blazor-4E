@@ -5,7 +5,16 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>reactfrontend</title>
-    <script src="https://localhost:7154/CustomElementsScript.js"></script>
+    <script src="/runtime-config.js"></script>
+    <script>
+      (() => {
+        const blazorBaseUrl =
+          (window.__appConfig?.blazorBaseUrl ?? 'https://localhost:7154').replace(/\/$/, '')
+        const customElementsScript = document.createElement('script')
+        customElementsScript.src = `${blazorBaseUrl}/CustomElementsScript.js`
+        document.head.appendChild(customElementsScript)
+      })()
+    </script>
 </head>
   <body>
     <div id="root"></div>

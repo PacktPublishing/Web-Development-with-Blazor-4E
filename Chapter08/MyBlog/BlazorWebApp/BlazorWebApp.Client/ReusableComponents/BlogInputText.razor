@@ -1,6 +1,6 @@
 ﻿@using System.Linq.Expressions
 <CascadingValue Value="CurrentEditContext">
-	@if (Label != null)
+	@if (!string.IsNullOrWhiteSpace(Label))
 	{
 		<label for="@Id" class="form-label">@Label</label>
 	}
@@ -15,7 +15,7 @@
 	public string? Label { get; set; }
 	[CascadingParameter]
 	public required EditContext CurrentEditContext { get; set; }
-	[Parameter]
+	[Parameter, EditorRequired]
 	public required string Value { get; set; }
 	[Parameter]
 	public EventCallback<string> ValueChanged { get; set; }

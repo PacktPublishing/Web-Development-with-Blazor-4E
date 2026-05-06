@@ -13,7 +13,11 @@ builder.AddServiceDefaults();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
-builder.AddNpgsqlDbContext<BlogDbContext>(connectionName: "myBlogDb");
+
+var connectionString = builder.Configuration.GetConnectionString("myBlogDb");
+builder.Services.AddDbContextFactory<BlogDbContext>(options =>
+    options.UseNpgsql(connectionString));
+
 builder.Services.AddScoped<IBlogRepository, BlogRepositoryEntityFrameworkDirectAccess>();
 var app = builder.Build();
 

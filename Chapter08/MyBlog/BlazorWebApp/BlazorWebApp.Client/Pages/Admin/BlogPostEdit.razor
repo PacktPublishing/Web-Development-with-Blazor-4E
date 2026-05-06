@@ -84,12 +84,12 @@
         }
         Categories = (await _repository.GetCategoriesAsync());
         Tags = (await _repository.GetTagsAsync());
-        base.OnParametersSet();
+        await base.OnParametersSetAsync();
     }
 
     public async Task SavePost()
     {
-        if (!string.IsNullOrEmpty(selectedCategory) && Categories != null)
+        if (!string.IsNullOrEmpty(selectedCategory) && Categories.Count > 0)
         {
             var category = Categories.FirstOrDefault(c => c.Id == selectedCategory);
             if (category != null)

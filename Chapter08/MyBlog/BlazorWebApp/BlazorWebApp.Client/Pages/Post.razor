@@ -30,7 +30,7 @@
 		await base.OnParametersSetAsync();
 	}
 
-MarkdownPipeline pipeline;
+MarkdownPipeline pipeline = default!;
 protected override Task OnInitializedAsync()
 {
     pipeline = new MarkdownPipelineBuilder()
