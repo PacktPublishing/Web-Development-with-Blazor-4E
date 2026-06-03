@@ -68,7 +68,7 @@ app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(BlazorWebApp.Client._Imports).Assembly);
+    .AddAdditionalAssemblies(typeof(BlazorWebApp.Client._Imports).Assembly, typeof(SharedComponents._Imports).Assembly);
 app.MapBlogPostApi();
 app.MapCategoryApi();
 app.MapTagApi();
